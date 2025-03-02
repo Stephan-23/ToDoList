@@ -15,14 +15,28 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => {
     console.error("MongoDB Connection Error:", err);
-    process.exit(1); // Exit if connection fails (optional)
+    process.exit(1); // Exit if connection fails
   });
 
-// Only start the server if MongoDB connects successfully
-mongoose.connection.once("open", () => {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Routes
+const Todo = require('./models/todo');
+
+// Add a new task
+app.post('/api/tasks', async (req, res) => {
+  try {
+    const newTask = new Todo(req.body);
+    await newTask.save();
+    res.status(201).json(newTask); // Send back the created task
+  } catch (error) {
+    console.error("Error saving task:", error);
+    res.status(400).json({ message: error.message }); // Send detailed error message
+  }
 });
 
+// Default route
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+
+// Start the server
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

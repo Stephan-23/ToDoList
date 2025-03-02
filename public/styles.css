@@ -254,3 +254,14 @@ body {
   .modal-actions button:last-child:hover {
     background-color: #d13450;
   }
+
+  .notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    display: none;
+  }
