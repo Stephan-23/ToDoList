@@ -40,6 +40,10 @@ async function handleFormSubmit(event) {
 
       // Show feedback to the user
       alert("Task added successfully!");
+
+      // Dynamically add the new task to the DOM
+      addTaskToDOM(task);
+
       hideAddTaskModal(); // Close the modal
     } else {
       const errorData = await response.json(); // Parse the error response
@@ -51,6 +55,26 @@ async function handleFormSubmit(event) {
     alert("An error occurred. Please try again.");
   }
 }
+
+// Function to add the task to the DOM
+function addTaskToDOM(task) {
+  const taskList = document.getElementById('taskList');
+  const li = document.createElement('li');
+  li.className = task.completed ? 'completed' : 'active';
+  li.id = `task-${task._id}`; // Add an ID to each task item
+  li.innerHTML = `
+    <div class="task-content">
+      <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion('${task._id}', this)">
+      <span class="task-text">${task.task}</span>
+    </div>
+    <div class="task-actions">
+      <button class="edit-btn" onclick="editTask('${task._id}')">✏️</button>
+      <button class="delete-btn" onclick="deleteTask('${task._id}')">🗑️</button>
+    </div>
+  `;
+  taskList.appendChild(li);
+}
+
 
 
 // Function to fetch all tasks from the backend
@@ -168,8 +192,12 @@ async function toggleTaskCompletion(taskId, checkbox) {
       } else {
         taskItem.classList.remove('completed');
       }
+
+      // Show success message
+      alert("Status updated");
     } else {
       console.error('Failed to update task:', response.status);
+      alert("Failed to update task. Please try again.");
     }
   } catch (error) {
     console.error('Error updating task:', error);
