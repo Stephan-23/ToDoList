@@ -26,7 +26,7 @@ async function handleFormSubmit(event) {
 
   try {
     // Send a POST request to the server
-    const response = await fetch('http://localhost:5000/api/tasks', { // Update the URL here
+    const response = await fetch('http://localhost:5000/api/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
