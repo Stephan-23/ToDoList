@@ -33,6 +33,18 @@ app.post('/api/tasks', async (req, res) => {
   }
 });
 
+
+
+// Fetch all tasks
+app.get('/api/tasks', async (req, res) => {
+  try {
+    const tasks = await Todo.find(); // Fetch all tasks from MongoDB
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 // Default route
 app.get("/", (req, res) => {
   res.send("API is running...");
