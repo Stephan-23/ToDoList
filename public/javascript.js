@@ -141,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Function to toggle task completion
+// Function to toggle task completion
 async function toggleTaskCompletion(taskId, checkbox) {
   const completed = checkbox.checked; // Get the checkbox status (true or false)
 
@@ -158,8 +159,10 @@ async function toggleTaskCompletion(taskId, checkbox) {
       const updatedTask = await response.json();
       console.log('Task updated:', updatedTask);
 
-      // You can also update the task's display immediately without re-fetching all tasks
+      // Find the task item in the DOM by its ID
       const taskItem = document.querySelector(`#task-${taskId}`);
+      
+      // Update the task's status in the DOM
       if (completed) {
         taskItem.classList.add('completed');
       } else {
@@ -173,6 +176,7 @@ async function toggleTaskCompletion(taskId, checkbox) {
     alert('An error occurred while updating the task. Please try again.');
   }
 }
+
 
 
 
