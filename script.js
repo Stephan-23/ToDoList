@@ -45,6 +45,27 @@ app.get('/api/tasks', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+// Update task completion status
+app.patch('/api/tasks/:id', async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const completedStatus = req.body.completed; // Get the status from the request body
+
+    // Find the task and update the completed field
+    const task = await Todo.findByIdAndUpdate(taskId, { completed: completedStatus }, { new: true });
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json(task); // Return the updated task
+  } catch (error) {
+    console.error('Error updating task:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // Default route
 app.get("/", (req, res) => {
   res.send("API is running...");

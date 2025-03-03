@@ -140,6 +140,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+// Function to toggle task completion
+async function toggleTaskCompletion(taskId, checkbox) {
+  const completed = checkbox.checked; // Get the checkbox status (true or false)
+
+  try {
+    // Send a PATCH request to update the task's completion status
+    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ completed }),
+    });
+
+    if (response.ok) {
+      const updatedTask = await response.json();
+      console.log('Task updated:', updatedTask);
+
+      // You can also update the task's display immediately without re-fetching all tasks
+      const taskItem = document.querySelector(`#task-${taskId}`);
+      if (completed) {
+        taskItem.classList.add('completed');
+      } else {
+        taskItem.classList.remove('completed');
+      }
+    } else {
+      console.error('Failed to update task:', response.status);
+    }
+  } catch (error) {
+    console.error('Error updating task:', error);
+    alert('An error occurred while updating the task. Please try again.');
+  }
+}
+
+
+
 // Event listeners
 document.getElementById("addTaskBtn").addEventListener("click", showAddTaskModal);
 document.getElementById("cancelTaskBtn").addEventListener("click", hideAddTaskModal);
