@@ -87,83 +87,91 @@ body {
     padding: 0;
   }
   
-  li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    background-color: #2d3a4f;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-  }
-  
-  li:hover {
-    background-color: #3d4f6a;
-  }
-  
-  .task-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .task-content input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: #e94560;
-    cursor: pointer;
-  }
-  
-  .task-text {
-    font-size: 16px;
-  }
-  
-  .task-actions {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .task-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-size: 16px;
-    transition: color 0.3s;
-  }
-  
-  .task-actions .edit-btn {
-    color: #4a6485;
-  }
-  
-  .task-actions .delete-btn {
-    color: #e94560;
-  }
-  
-  .task-actions button:hover {
-    color: #ffffff;
-  }
-  
-  .completed .task-text {
-    text-decoration: line-through;
-    color: #7a8a99;
-  }
-  
-  .deleted {
-    background-color: #3d4f6a;
-    opacity: 0.7;
-  }
-  
-  .deleted .task-text {
-    text-decoration: line-through;
-    color: #7a8a99;
-  }
-  
-  .deleted .task-actions {
-    display: none; /* Hide actions for deleted tasks */
-  }
-  
+ /* Add or update these styles in styles.css */
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #2d3a4f; /* Dark blue-gray for tasks */
+  margin-bottom: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  color: white; /* Ensure text is white */
+}
+
+li:hover {
+  background-color: #3d4f6a; /* Slightly lighter on hover */
+}
+
+.task-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-content input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #4CAF50; /* Green checkmark for completed tasks */
+  cursor: pointer;
+}
+
+.task-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-text {
+  font-size: 16px;
+  color: white;
+}
+
+.task-dates {
+  font-size: 12px;
+  color: #7a8a99; /* Light gray for dates */
+}
+
+.completed .task-text {
+  text-decoration: line-through;
+  color: #7a8a99; /* Grayed out for completed tasks */
+}
+
+.completed .task-dates {
+  color: #7a8a99; /* Grayed out dates for completed tasks */
+}
+
+.task-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.task-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #7a8a99; /* Light gray for icons */
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.task-actions button:hover {
+  color: white; /* White on hover for icons */
+}
+
+.deleted {
+  background-color: #3d4f6a;
+  opacity: 0.7;
+}
+
+.deleted .task-text, .deleted .task-dates {
+  text-decoration: line-through;
+  color: #7a8a99;
+}
+
+.deleted .task-actions {
+  display: none; /* Hide actions for deleted tasks */
+}
   /* Modal Styling */
   .modal {
     display: none;
@@ -265,3 +273,4 @@ body {
     border-radius: 5px;
     display: none;
   }
+

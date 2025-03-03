@@ -135,7 +135,7 @@ function filterTasks(filter) {
 }
 
 // Display tasks in the task list
-function displayTasks(tasks) {
+/*function displayTasks(tasks) {
   const taskList = document.getElementById('taskList');
   taskList.innerHTML = ''; // Clear existing tasks
 
@@ -154,7 +154,48 @@ function displayTasks(tasks) {
     `;
     taskList.appendChild(li);
   });
+}*/
+// Function to display tasks in the task list (updated)
+function displayTasks(tasks) {
+  const taskList = document.getElementById('taskList');
+  taskList.innerHTML = ''; // Clear existing tasks
+
+  tasks.forEach(task => {
+    const li = document.createElement('li');
+    li.className = task.completed ? 'completed' : 'active';
+    if (task.deleted) li.className += ' deleted';
+
+    // Format dates
+    const createdDate = new Date(task.createdAt).toLocaleDateString('en-US', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    });
+    const completedDate = task.completedAt ? new Date(task.completedAt).toLocaleDateString('en-US', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    }) : null;
+
+    li.innerHTML = `
+      <div class="task-content">
+        <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion('${task._id}', this)">
+        <div class="task-details">
+          <span class="task-text">${task.task}</span>
+          <span class="task-dates">
+            Created: ${createdDate}${completedDate ? ` | Completed: ${completedDate}` : ''} 
+          </span>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="edit-btn" onclick="editTask('${task._id}')">✏️</button>
+        <button class="delete-btn" onclick="deleteTask('${task._id}')">🗑️</button>
+      </div>
+    `;
+    taskList.appendChild(li);
+  });
 }
+
 
 // Initialize the page by fetching tasks when it loads
 document.addEventListener('DOMContentLoaded', () => {
