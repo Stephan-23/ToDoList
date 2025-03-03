@@ -59,6 +59,7 @@ app.patch('/api/tasks/:id', async (req, res) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
+    // Send back the updated task
     res.json(task); // Return the updated task
   } catch (error) {
     console.error('Error updating task:', error);

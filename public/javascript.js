@@ -166,6 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to toggle task completion
 // Function to toggle task completion
+
+// Function to toggle task completion
 async function toggleTaskCompletion(taskId, checkbox) {
   const completed = checkbox.checked; // Get the checkbox status (true or false)
 
@@ -195,8 +197,12 @@ async function toggleTaskCompletion(taskId, checkbox) {
 
       // Show success message
       alert("Status updated");
+
     } else {
-      console.error('Failed to update task:', response.status);
+      // Log the response status code if something goes wrong
+      console.error('Failed to update task. Response status:', response.status);
+      const errorData = await response.json(); // Parse the error response
+      console.error('Error details:', errorData);
       alert("Failed to update task. Please try again.");
     }
   } catch (error) {
@@ -204,7 +210,6 @@ async function toggleTaskCompletion(taskId, checkbox) {
     alert('An error occurred while updating the task. Please try again.');
   }
 }
-
 
 
 
