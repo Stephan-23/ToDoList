@@ -45,6 +45,17 @@ app.get('/api/tasks', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+// Fetch all tasks and sort them by priority
+/*app.get('/api/tasks', async (req, res) => {
+  try {
+    const tasks = await Todo.find().sort({ priority: 1 }); // Sorting by priority (Low, Medium, High)
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});*/
+
 
 // Update task completion status
 // Update task completion status
