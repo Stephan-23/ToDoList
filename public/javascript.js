@@ -78,28 +78,6 @@ function addTaskToDOM(task) {
 
 
 // Function to fetch all tasks from the backend
-// Function to fetch all tasks from the backend
-/*async function fetchTasks() {
-  try {
-    const response = await fetch('http://localhost:5000/api/tasks', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (response.ok) {
-      const tasks = await response.json();
-      displayTasks(tasks); // Display all tasks initially
-    } else {
-      console.error('Failed to fetch tasks:', response.status);
-      alert('Failed to fetch tasks. Please try again.');
-    }
-  } catch (error) {
-    console.error('Error fetching tasks:', error);
-    alert('An error occurred while fetching tasks. Please try again.');
-  }
-}*/
 async function fetchTasks(filter = 'all') {
   let url = 'http://localhost:5000/api/tasks'; // Default fetch all tasks
 
@@ -134,7 +112,7 @@ function filterTasks(filter) {
           item.style.display = (!isCompleted && !isDeleted) ? 'flex' : 'none';
           break;
         case 'completed':
-          item.style.display = isCompleted ? 'flex' : 'none';
+          item.style.display =  (isCompleted && !isDeleted) ? 'flex' : 'none';
           break;
         case 'history':
           item.style.display = isDeleted ? 'flex' : 'none';
@@ -155,91 +133,6 @@ function filterTasks(filter) {
 }
 
 // Function to delete a task (soft delete)
-/*async function deleteTask(taskId) {
-  try {
-    // Send a PATCH request to update the deleted status of the task
-    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/delete`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (response.ok) {
-      const deletedTask = await response.json();
-      console.log('Task deleted:', deletedTask);
-
-      // Remove the task from the DOM
-      const taskItem = document.querySelector(`#task-${taskId}`);
-      taskItem.classList.add('deleted'); // Mark it as deleted visually
-      taskItem.querySelector('.task-actions').style.display = 'none'; // Hide actions for deleted tasks
-
-      // Optionally show a notification
-      alert("Task deleted!");
-    } else {
-      const errorData = await response.json(); // Parse the error response
-      console.error('Failed to delete task:', errorData);
-      alert("Failed to delete task. Please try again.");
-    }
-  } catch (error) {
-    console.error('Error deleting task:', error);
-    alert('An error occurred while deleting the task. Please try again.');
-  }
-}*/
-// Function to delete a task (soft delete) with confirmation
-/*async function deleteTask(taskId) {
-  // Show confirmation dialog
-  const confirmed = confirm("Are you sure you want to delete this task? This action cannot be undone.");
-  
-  if (!confirmed) {
-    return; // Exit if user cancels
-  }
-
-  try {
-    // Send a PATCH request to update the deleted status of the task
-    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/delete`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (response.ok) {
-      const deletedTask = await response.json();
-      console.log('Task deleted:', deletedTask);
-
-      // Update the task in the DOM
-      const taskItem = document.querySelector(`#task-${taskId}`);
-      taskItem.classList.add('deleted'); // Mark it as deleted visually
-      taskItem.querySelector('.task-actions').style.display = 'none'; // Hide actions for deleted tasks
-
-      // Optionally show a notification
-      alert("Task deleted!");
-    } else {
-      const errorData = await response.json(); // Parse the error response
-      console.error('Failed to delete task:', errorData);
-      alert("Failed to delete task. Please try again.");
-    }
-  } catch (error) {
-    console.error('Error deleting task:', error);
-    alert('An error occurred while deleting the task. Please try again.');
-  }
-}*/
-// Function to show the delete confirmation modal// Function to show the delete confirmation modal
-/*function showConfirmDeleteModal(taskId) {
-  const modal = document.getElementById('confirmDeleteModal');
-  modal.style.display = 'block';
-
-  // Store the taskId in a data attribute or variable for use in confirmation
-  modal.dataset.taskId = taskId;
-}
-
-// Function to hide the delete confirmation modal
-function hideConfirmDeleteModal() {
-  const modal = document.getElementById('confirmDeleteModal');
-  modal.style.display = 'none'; // Hide the modal
-  modal.dataset.taskId = ''; // Clear the taskId
-}*/
 function showConfirmDeleteModal(taskId) {
   const modal = document.getElementById('confirmDeleteModal');
   modal.style.display = 'block'; // Make sure it's visible
@@ -308,45 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hideConfirmDeleteModal(); // Hide modal if user cancels
   })
 });
-/*function displayTasks(tasks) {
-  const taskList = document.getElementById('taskList');
-  taskList.innerHTML = ''; // Clear existing tasks
 
-  tasks.forEach(task => {
-    const li = document.createElement('li');
-    li.className = task.completed ? 'completed' : 'active';
-    if (task.deleted) li.className += ' deleted';
-
-    // Format dates
-    const createdDate = new Date(task.createdAt).toLocaleDateString('en-US', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
-    });
-    const completedDate = task.completedAt ? new Date(task.completedAt).toLocaleDateString('en-US', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
-    }) : null;
-
-    li.innerHTML = `
-      <div class="task-content">
-        <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion('${task._id}', this)">
-        <div class="task-details">
-          <span class="task-text">${task.task}</span>
-          <span class="task-dates">
-            Created: ${createdDate}${completedDate ? ` | Completed: ${completedDate}` : ''} 
-          </span>
-        </div>
-      </div>
-      <div class="task-actions">
-        <button class="edit-btn" onclick="editTask('${task._id}')">✏️</button>
-        <button class="delete-btn" onclick="deleteTask('${task._id}')">🗑️</button>
-      </div>
-    `;
-    taskList.appendChild(li);
-  });
-}*/
 // Function to display tasks in the task list (updated)
 function displayTasks(tasks) {
   const taskList = document.getElementById('taskList');
@@ -395,19 +250,12 @@ function displayTasks(tasks) {
 
 
 // Initialize the page by fetching tasks when it loads
-/*document.addEventListener('DOMContentLoaded', () => {
-  fetchTasks(); // Fetch tasks when the page loads
-  filterTasks('all'); // Default to showing all tasks
-}); */
 document.addEventListener('DOMContentLoaded', () => {
   fetchTasks(); // Fetch tasks when the page loads
   filterTasks('active'); // Default to showing active tasks
 });
 
 
-
-// Function to toggle task completion
-// Function to toggle task completion
 
 // Function to toggle task completion
 async function toggleTaskCompletion(taskId, checkbox) {
@@ -459,5 +307,3 @@ async function toggleTaskCompletion(taskId, checkbox) {
 document.getElementById("addTaskBtn").addEventListener("click", showAddTaskModal);
 document.getElementById("cancelTaskBtn").addEventListener("click", hideAddTaskModal);
 document.getElementById("taskForm").addEventListener("submit", handleFormSubmit); // Form submission listener
-
-
