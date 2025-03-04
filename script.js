@@ -38,7 +38,7 @@ app.post('/api/tasks', async (req, res) => {
 // Fetch all tasks
 app.get('/api/tasks', async (req, res) => {
   try {
-    const tasks = await Todo.find(); // Fetch all tasks from MongoDB
+    const tasks = await Todo.find(); // Fetch all tasks from MongoDB, exclude the deleted 
     res.json(tasks);
   } catch (error) {
     console.error('Error fetching tasks:', error);
@@ -84,6 +84,44 @@ app.patch('/api/tasks/:id', async (req, res) => {
     res.json(task); // Return the updated task
   } catch (error) {
     console.error('Error updating task:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+// Soft delete a task
+app.patch('/api/tasks/:id/delete', async (req, res) => {
+  try {
+    const taskId = req.params.id;
+
+    // Find the task and update the deleted field
+    const task = await Todo.findByIdAndUpdate(
+      taskId, 
+      { 
+        deleted: true, 
+        deletedAt: new Date() // Add a timestamp for when it was deleted
+      }, 
+      { new: true }
+    );
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json(task); // Return the updated task
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.get('/api/tasks/history', async (req, res) => {
+  try {
+    // Fetch only deleted tasks
+    const tasks = await Todo.find({ deleted: true });
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error fetching deleted tasks:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

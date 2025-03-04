@@ -79,7 +79,7 @@ function addTaskToDOM(task) {
 
 // Function to fetch all tasks from the backend
 // Function to fetch all tasks from the backend
-async function fetchTasks() {
+/*async function fetchTasks() {
   try {
     const response = await fetch('http://localhost:5000/api/tasks', {
       method: 'GET',
@@ -99,8 +99,28 @@ async function fetchTasks() {
     console.error('Error fetching tasks:', error);
     alert('An error occurred while fetching tasks. Please try again.');
   }
-}
+}*/
+async function fetchTasks(filter = 'all') {
+  let url = 'http://localhost:5000/api/tasks'; // Default fetch all tasks
 
+  if (filter === 'history') {
+    url = 'http://localhost:5000/api/tasks/history'; // Fetch only deleted tasks
+  }
+
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      const tasks = await response.json();
+      displayTasks(tasks); // Display tasks based on the filter
+    } else {
+      console.error('Failed to fetch tasks:', response.status);
+      alert('Failed to fetch tasks. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    alert('An error occurred while fetching tasks. Please try again.');
+  }
+}
 // Function to filter tasks based on the button clicked
 function filterTasks(filter) {
   fetchTasks().then(() => {
@@ -134,8 +154,41 @@ function filterTasks(filter) {
   });
 }
 
-// Function to display tasks in the task list (updated)
-function displayTasks(tasks) {
+// Function to delete a task (soft delete)
+async function deleteTask(taskId) {
+  try {
+    // Send a PATCH request to update the deleted status of the task
+    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/delete`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const deletedTask = await response.json();
+      console.log('Task deleted:', deletedTask);
+
+      // Remove the task from the DOM
+      const taskItem = document.querySelector(`#task-${taskId}`);
+      taskItem.classList.add('deleted'); // Mark it as deleted visually
+      taskItem.querySelector('.task-actions').style.display = 'none'; // Hide actions for deleted tasks
+
+      // Optionally show a notification
+      alert("Task deleted!");
+    } else {
+      const errorData = await response.json(); // Parse the error response
+      console.error('Failed to delete task:', errorData);
+      alert("Failed to delete task. Please try again.");
+    }
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    alert('An error occurred while deleting the task. Please try again.');
+  }
+}
+
+
+/*function displayTasks(tasks) {
   const taskList = document.getElementById('taskList');
   taskList.innerHTML = ''; // Clear existing tasks
 
@@ -163,6 +216,51 @@ function displayTasks(tasks) {
           <span class="task-text">${task.task}</span>
           <span class="task-dates">
             Created: ${createdDate}${completedDate ? ` | Completed: ${completedDate}` : ''} 
+          </span>
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="edit-btn" onclick="editTask('${task._id}')">✏️</button>
+        <button class="delete-btn" onclick="deleteTask('${task._id}')">🗑️</button>
+      </div>
+    `;
+    taskList.appendChild(li);
+  });
+}*/
+// Function to display tasks in the task list (updated)
+function displayTasks(tasks) {
+  const taskList = document.getElementById('taskList');
+  taskList.innerHTML = ''; // Clear existing tasks
+
+  tasks.forEach(task => {
+    const li = document.createElement('li');
+    li.className = task.completed ? 'completed' : 'active';
+    if (task.deleted) li.className += ' deleted';
+
+    // Format dates
+    const createdDate = new Date(task.createdAt).toLocaleDateString('en-US', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    });
+    const completedDate = task.completedAt ? new Date(task.completedAt).toLocaleDateString('en-US', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    }) : null;
+    const deletedDate = task.deletedAt ? new Date(task.deletedAt).toLocaleDateString('en-US', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    }) : null;
+
+    li.innerHTML = `
+      <div class="task-content">
+        <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion('${task._id}', this)">
+        <div class="task-details">
+          <span class="task-text">${task.task}</span>
+          <span class="task-dates">
+            Created: ${createdDate}${completedDate ? ` | Completed: ${completedDate}` : ''}${deletedDate ? ` | Deleted: ${deletedDate}` : ''}
           </span>
         </div>
       </div>

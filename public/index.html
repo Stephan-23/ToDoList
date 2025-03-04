@@ -13,11 +13,17 @@
       <input type="text" id="searchInput" placeholder="Search tasks...">
       <button id="addTaskBtn">ADD NEW TASK</button>
     </div>
-    <div class="filter-section">
+   <!--<div class="filter-section">
       <button class="filter-btn active" onclick="filterTasks('all')">All</button>
       <button class="filter-btn" onclick="filterTasks('active')">Active</button>
       <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
       <button class="filter-btn" onclick="filterTasks('history')">History</button>
+    </div>-->
+    <div class="filter-section">
+      <button class="filter-btn" onclick="filterTasks('active')">Active</button>
+      <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
+      <button class="filter-btn" onclick="filterTasks('history')">Deleted</button>
+      <button class="filter-btn active" onclick="filterTasks('all')">History</button>
     </div>
     <ul id="taskList"></ul>
   </div>
