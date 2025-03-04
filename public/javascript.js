@@ -140,21 +140,44 @@ function filterTasks(filter) {
 }
 
 // Function to search tasks based on search input
+
+// Function to search tasks based on search input, respecting the current filter
 function searchTasks(searchTerm) {
   fetchTasks().then(() => {
     const taskItems = document.querySelectorAll('#taskList li');
     const lowercasedSearch = searchTerm.toLowerCase().trim();
+    const activeFilter = document.querySelector('.filter-btn.active')?.getAttribute('onclick')?.match(/filterTasks\('([^']+)'\)/)?.[1] || 'all';
 
     taskItems.forEach(item => {
       const taskText = item.querySelector('.task-text').textContent.toLowerCase();
       const taskDescription = item.dataset.description || ''; // Search descriptions too
+      const isCompleted = item.classList.contains('completed');
+      const isDeleted = item.classList.contains('deleted');
 
-      // Show task if search term matches title or description
-      const matches = taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch);
-      item.style.display = matches ? 'flex' : 'none';
+      // Determine if the task should be shown based on the current filter and search term
+      let shouldShow = false;
+      switch (activeFilter) {
+        case 'active':
+          shouldShow = (!isCompleted && !isDeleted) && (taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch));
+          break;
+        case 'completed':
+          shouldShow = isCompleted && (taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch));
+          break;
+        case 'history':
+          shouldShow = isDeleted && (taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch));
+          break;
+        case 'all':
+        default:
+          shouldShow = (taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch));
+          break;
+      }
+
+      item.style.display = shouldShow ? 'flex' : 'none';
     });
   });
 }
+
+
 
 // Function to show the delete confirmation modal
 function showConfirmDeleteModal(taskId) {
