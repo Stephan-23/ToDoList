@@ -155,7 +155,7 @@ function filterTasks(filter) {
 }
 
 // Function to delete a task (soft delete)
-async function deleteTask(taskId) {
+/*async function deleteTask(taskId) {
   try {
     // Send a PATCH request to update the deleted status of the task
     const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/delete`, {
@@ -185,9 +185,129 @@ async function deleteTask(taskId) {
     console.error('Error deleting task:', error);
     alert('An error occurred while deleting the task. Please try again.');
   }
+}*/
+// Function to delete a task (soft delete) with confirmation
+/*async function deleteTask(taskId) {
+  // Show confirmation dialog
+  const confirmed = confirm("Are you sure you want to delete this task? This action cannot be undone.");
+  
+  if (!confirmed) {
+    return; // Exit if user cancels
+  }
+
+  try {
+    // Send a PATCH request to update the deleted status of the task
+    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/delete`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const deletedTask = await response.json();
+      console.log('Task deleted:', deletedTask);
+
+      // Update the task in the DOM
+      const taskItem = document.querySelector(`#task-${taskId}`);
+      taskItem.classList.add('deleted'); // Mark it as deleted visually
+      taskItem.querySelector('.task-actions').style.display = 'none'; // Hide actions for deleted tasks
+
+      // Optionally show a notification
+      alert("Task deleted!");
+    } else {
+      const errorData = await response.json(); // Parse the error response
+      console.error('Failed to delete task:', errorData);
+      alert("Failed to delete task. Please try again.");
+    }
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    alert('An error occurred while deleting the task. Please try again.');
+  }
+}*/
+// Function to show the delete confirmation modal// Function to show the delete confirmation modal
+/*function showConfirmDeleteModal(taskId) {
+  const modal = document.getElementById('confirmDeleteModal');
+  modal.style.display = 'block';
+
+  // Store the taskId in a data attribute or variable for use in confirmation
+  modal.dataset.taskId = taskId;
+}
+
+// Function to hide the delete confirmation modal
+function hideConfirmDeleteModal() {
+  const modal = document.getElementById('confirmDeleteModal');
+  modal.style.display = 'none'; // Hide the modal
+  modal.dataset.taskId = ''; // Clear the taskId
+}*/
+function showConfirmDeleteModal(taskId) {
+  const modal = document.getElementById('confirmDeleteModal');
+  modal.style.display = 'block'; // Make sure it's visible
+  modal.classList.add('show');
+  modal.dataset.taskId = taskId;
+}
+
+function hideConfirmDeleteModal() {
+  const modal = document.getElementById('confirmDeleteModal');
+  modal.classList.remove('show');
+  modal.style.display = 'none'; // Hide it
+  modal.dataset.taskId = '';
 }
 
 
+// Function to delete a task (soft delete) with confirmation modal
+async function deleteTask(taskId) {
+  // Show the confirmation modal instead of the native confirm dialog
+  showConfirmDeleteModal(taskId);
+}
+
+// Add event listeners for the confirmation modal buttons
+document.addEventListener('DOMContentLoaded', () => {
+  const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+  const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+  confirmDeleteBtn.addEventListener('click', async () => {
+    const taskId = document.getElementById('confirmDeleteModal').dataset.taskId;
+    if (!taskId) return;
+
+    try {
+      // Send a PATCH request to update the deleted status of the task
+      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/delete`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const deletedTask = await response.json();
+        console.log('Task deleted:', deletedTask);
+
+        // Update the task in the DOM
+        const taskItem = document.querySelector(`#task-${taskId}`);
+        taskItem.classList.add('deleted'); // Mark it as deleted visually
+        taskItem.querySelector('.task-actions').style.display = 'none'; // Hide actions for deleted tasks
+
+        // Hide the modal
+        hideConfirmDeleteModal(); // Ensure the modal is hidden after deletion
+
+        // Optionally show a notification
+       // alert("Task deleted!");
+      } else {
+        const errorData = await response.json(); // Parse the error response
+        console.error('Failed to delete task:', errorData);
+       /* alert("Failed to delete task. Please try again.");*/
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+     /* alert('An error occurred while deleting the task. Please try again.');*/
+    }
+  });
+
+  cancelDeleteBtn.addEventListener('click', () => {
+    hideConfirmDeleteModal(); // Hide modal if user cancels
+  })
+});
 /*function displayTasks(tasks) {
   const taskList = document.getElementById('taskList');
   taskList.innerHTML = ''; // Clear existing tasks
