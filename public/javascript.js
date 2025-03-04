@@ -134,27 +134,6 @@ function filterTasks(filter) {
   });
 }
 
-// Display tasks in the task list
-/*function displayTasks(tasks) {
-  const taskList = document.getElementById('taskList');
-  taskList.innerHTML = ''; // Clear existing tasks
-
-  tasks.forEach(task => {
-    const li = document.createElement('li');
-    li.className = task.completed ? 'completed' : 'active';
-    li.innerHTML = `
-      <div class="task-content">
-        <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTaskCompletion('${task._id}', this)">
-        <span class="task-text">${task.task}</span>
-      </div>
-      <div class="task-actions">
-        <button class="edit-btn" onclick="editTask('${task._id}')">✏️</button>
-        <button class="delete-btn" onclick="deleteTask('${task._id}')">🗑️</button>
-      </div>
-    `;
-    taskList.appendChild(li);
-  });
-}*/
 // Function to display tasks in the task list (updated)
 function displayTasks(tasks) {
   const taskList = document.getElementById('taskList');
