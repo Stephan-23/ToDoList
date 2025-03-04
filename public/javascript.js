@@ -275,9 +275,13 @@ function displayTasks(tasks) {
 
 
 // Initialize the page by fetching tasks when it loads
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
   fetchTasks(); // Fetch tasks when the page loads
   filterTasks('all'); // Default to showing all tasks
+}); */
+document.addEventListener('DOMContentLoaded', () => {
+  fetchTasks(); // Fetch tasks when the page loads
+  filterTasks('active'); // Default to showing active tasks
 });
 
 
