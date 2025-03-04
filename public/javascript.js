@@ -26,7 +26,7 @@ async function handleFormSubmit(event) {
 
   try {
     // Send a POST request to the server
-    const response = await fetch('http://localhost:5000/api/tasks', {
+    const response = await fetch('/api/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,10 +79,10 @@ function addTaskToDOM(task) {
 
 // Function to fetch all tasks from the backend
 async function fetchTasks(filter = 'all') {
-  let url = 'http://localhost:5000/api/tasks'; // Default fetch all tasks
+  let url = '/api/tasks'; // Default fetch all tasks
 
   if (filter === 'history') {
-    url = 'http://localhost:5000/api/tasks/history'; // Fetch only deleted tasks
+    url = 'api/tasks/history'; // Fetch only deleted tasks
   }
 
   try {
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       // Send a PATCH request to update the deleted status of the task
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/delete`, {
+      const response = await fetch(`api/tasks/${taskId}/delete`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -321,7 +321,7 @@ async function toggleTaskCompletion(taskId, checkbox) {
 
   try {
     // Send a PATCH request to update the task's completion status
-    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+    const response = await fetch(`api/tasks/${taskId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
