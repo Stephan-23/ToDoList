@@ -125,12 +125,62 @@ function filterTasks(filter) {
     });
 
     // Update active filter button styling
+
+
+
+
+
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.classList.remove('active');
     });
     document.querySelector(`.filter-btn[onclick="filterTasks('${filter}')"]`).classList.add('active');
+
+    // Reapply search filter after filtering by buttons
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    if (searchTerm) {
+      searchTasks(searchTerm);
+    }s
   });
 }
+
+// Function to search tasks based on search input, respecting the current filter
+function searchTasks(searchTerm) {
+  fetchTasks().then(() => {
+    const taskItems = document.querySelectorAll('#taskList li');
+    const lowercasedSearch = searchTerm.toLowerCase().trim();
+    const activeFilter = document.querySelector('.filter-btn.active')?.getAttribute('onclick')?.match(/filterTasks\('([^']+)'\)/)?.[1] || 'all';
+
+    taskItems.forEach(item => {
+      const taskText = item.querySelector('.task-text').textContent.toLowerCase();
+      const taskDescription = item.dataset.description || ''; // Search descriptions too
+      const isCompleted = item.classList.contains('completed');
+      const isDeleted = item.classList.contains('deleted');
+
+      // Determine if the task should be shown based on the current filter and search term
+      let shouldShow = false;
+      switch (activeFilter) {
+        case 'active':
+          shouldShow = (!isCompleted && !isDeleted) && (taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch));
+          break;
+        case 'completed':
+          shouldShow = isCompleted && (taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch));
+          break;
+        case 'history':
+          shouldShow = isDeleted && (taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch));
+          break;
+        case 'all':
+        default:
+          shouldShow = (taskText.includes(lowercasedSearch) || taskDescription.includes(lowercasedSearch));
+          break;
+      }
+
+      item.style.display = shouldShow ? 'flex' : 'none';
+    });
+  });
+}
+
+
+
 
 // Function to delete a task (soft delete)
 
@@ -148,61 +198,6 @@ function hideConfirmDeleteModal() {
   modal.dataset.taskId = '';
 }
 
-
-/*// Function to delete a task (soft delete) with confirmation modal
-async function deleteTask(taskId) {
-  // Show the confirmation modal instead of the native confirm dialog
-  showConfirmDeleteModal(taskId);
-}
-
-// Add event listeners for the confirmation modal buttons
-document.addEventListener('DOMContentLoaded', () => {
-  const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-  const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-
-  confirmDeleteBtn.addEventListener('click', async () => {
-    const taskId = document.getElementById('confirmDeleteModal').dataset.taskId;
-    if (!taskId) return;
-
-    try {
-      // Send a PATCH request to update the deleted status of the task
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}/delete`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        const deletedTask = await response.json();
-        console.log('Task deleted:', deletedTask);
-
-        // Update the task in the DOM
-        const taskItem = document.querySelector(`#task-${taskId}`);
-        taskItem.classList.add('deleted'); // Mark it as deleted visually
-        taskItem.querySelector('.task-actions').style.display = 'none'; // Hide actions for deleted tasks
-
-        // Hide the modal
-        hideConfirmDeleteModal(); // Ensure the modal is hidden after deletion
-
-        // Optionally show a notification
-       // alert("Task deleted!");
-      } else {
-        const errorData = await response.json(); // Parse the error response
-        console.error('Failed to delete task:', errorData);
-       /* alert("Failed to delete task. Please try again.");
-      }
-    } catch (error) {
-      console.error('Error deleting task:', error);
-     /* alert('An error occurred while deleting the task. Please try again.');
-    }
-  });
-
-  cancelDeleteBtn.addEventListener('click', () => {
-    hideConfirmDeleteModal(); // Hide modal if user cancels
-  })
-});*/
-
 // Function to delete a task (soft delete) with confirmation modal
 async function deleteTask(taskId) {
   // Show the confirmation modal instead of the native confirm dialog
@@ -213,6 +208,13 @@ async function deleteTask(taskId) {
 document.addEventListener('DOMContentLoaded', () => {
   const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
   const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+    // Search input event listener for real-time filtering
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+      searchTasks(e.target.value);
+    });
+  
 
   confirmDeleteBtn.addEventListener('click', async () => {
     const taskId = document.getElementById('confirmDeleteModal').dataset.taskId;
