@@ -1,0 +1,106 @@
+/* Confirmation Modal Styling */
+#confirmDeleteModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .confirm-modal-content {
+    background-color: #2d3a4f; /* Dark blue-gray to match your project */
+    margin: 15% auto; /* Centered, slightly lower than the add task modal */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    color: white; /* White text to match your project */
+  }
+  
+  .confirm-modal-content h2 {
+    color: #e94560; /* Red for "Confirm Deletion" title to indicate danger */
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+  
+  .confirm-modal-content p {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #a2b1c6; /* Light gray text for the message */
+  }
+  
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center; /* Center the buttons for confirmation */
+  }
+  
+  .cancel-btn, .delete-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .cancel-btn {
+    background-color: #4a6485; /* Blue-gray for cancel, matching your filter buttons */
+    color: white;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #3d4f6a; /* Darker on hover */
+  }
+  
+  .delete-btn {
+    background-color: #e94560; /* Red for delete, matching your add button */
+    color: white;
+  }
+  
+  .delete-btn:hover {
+    background-color: #d13450; /* Darker red on hover */
+  }
+
+  #confirmDeleteModal {
+    visibility: hidden; /* Try visibility if 'display: none' doesn't work */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-out */
+  }
+  
+  #confirmDeleteModal.show {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  @media (max-width: 480px) {
+    .confirm-modal-content {
+        margin: 10% auto; /* Adjust margin for smaller screens */
+        padding: 15px; /* Reduce padding for smaller screens */
+    }
+
+    .confirm-modal-content h2 {
+        font-size: 18px; /* Smaller font size for smaller screens */
+    }
+
+    .confirm-modal-content p {
+        font-size: 14px; /* Smaller font size for smaller screens */
+    }
+
+    .modal-actions {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        gap: 10px;
+    }
+
+    .cancel-btn, .delete-btn {
+        width: 100%; /* Full-width buttons on small screens */
+        padding: 12px; /* Slightly larger padding for easier tapping */
+        font-size: 14px; /* Smaller font size for smaller screens */
+    }
+}
