@@ -321,7 +321,7 @@ async function toggleTaskCompletion(taskId, checkbox) {
 
   try {
     // Send a PATCH request to update the task's completion status
-    const response = await fetch(`api/tasks/${taskId}`, {
+    const response = await fetch(`https://todolist-app-39zk.onrender.com/api/tasks/${taskId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
